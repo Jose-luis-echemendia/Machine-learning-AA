@@ -16,8 +16,8 @@ Jose Luis Echemendia López
 <br>
 
 **Tutores:**  
-Ms.C. Ángel Vázquez
 Ing. Orlian  
+Ms.C. Ángel Vázquez
 
 <br><br>
 
