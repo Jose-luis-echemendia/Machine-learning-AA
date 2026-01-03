@@ -50,15 +50,15 @@ Para este estudio se seleccionan tres algoritmos de clasificación ampliamente u
 
 #### • K-Nearest Neighbors (KNN)
 
-KNN es un algoritmo basado en distancias que clasifica una instancia en función de las etiquetas de sus vecinos más cercanos. Es simple, no requiere entrenamiento costoso y suele funcionar bien en datos sensoriales normalizados. Como desventaja, su rendimiento se degrada en datasets grandes debido al costo de búsqueda.
+KNN es un algoritmo basado en distancias que clasifica una instancia en función de las etiquetas de sus vecinos más cercanos. Es simple, no requiere entrenamiento costoso y suele funcionar bien en datos sensoriales normalizados. Como desventaja, su rendimiento se degrada en datasets grandes debido al costo de búsqueda. En el contexto de señales IMU, KNN puede capturar patrones locales de movimiento al comparar instancias similares en el espacio de características.
 
-#### • Random Forest
+#### • Árboles de Decisión
 
-Random Forest es un método basado en múltiples árboles de decisión que votan para decidir la clase final. Es robusto al ruido, maneja relaciones no lineales y funciona bien en ambientes con alto número de características, como señales IMU. Sin embargo, puede consumir más recursos y perder interpretabilidad.
+Los Árboles de Decisión son modelos jerárquicos que dividen el espacio de características mediante reglas de decisión basadas en umbrales. Son fáciles de interpretar, no requieren normalización de datos y pueden capturar relaciones no lineales. Sin embargo, tienden al sobreajuste si no se controla su profundidad. En el reconocimiento de actividades, pueden identificar patrones discriminativos como rangos específicos de aceleración o frecuencia cardíaca que caracterizan cada actividad física.
 
-#### • Support Vector Machines (SVM)
+#### • Redes Neuronales
 
-SVM busca maximizar el margen entre clases mediante hiperplanos óptimos. Permite el uso de _kernels_ para manejar relaciones no lineales y es muy efectivo en espacios de alta dimensión. Requiere un preprocesamiento cuidadoso y ajuste de parámetros como C y gamma.
+Las Redes Neuronales son modelos de aprendizaje profundo compuestos por capas de neuronas artificiales capaces de aprender representaciones complejas y no lineales de los datos. Son especialmente efectivas en datos secuenciales y multivariados como las señales IMU. Requieren mayor cantidad de datos y tiempo de entrenamiento, pero pueden lograr un rendimiento superior al capturar dependencias temporales y espaciales entre sensores. Para este trabajo se utilizará una arquitectura feedforward (perceptrón multicapa) que permita modelar las relaciones complejas entre las características sensoriales y las actividades físicas.
 
 Cada uno de estos algoritmos será evaluado dentro del proceso KDD para determinar cuál ofrece el mejor rendimiento en el reconocimiento de actividades utilizando PAMAP2.
 
@@ -96,9 +96,9 @@ Descripción detallada.
 
 Entrenamiento con:
 
-- KNN
-- Random Forest
-- SVM
+- KNN (K-Nearest Neighbors)
+- Árboles de Decisión
+- Redes Neuronales (Perceptrón Multicapa)
 
 Incluye parámetros, gráficas y explicación.
 
