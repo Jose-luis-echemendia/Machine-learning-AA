@@ -120,7 +120,15 @@ Insertar el link al cuaderno con el código.
 
 ## 4. Conclusiones
 
-Interpretación de los resultados y análisis comparativo entre algoritmos.
+El algoritmo K-Nearest Neighbors (KNN) demostró un desempeño sobresaliente en la tarea de reconocimiento de actividades físicas utilizando el dataset PAMAP2. Con una configuración de K = 3, distancia euclidiana y un conjunto de 52 características sensoriales normalizadas, el modelo alcanzó un accuracy del 92.77% y un F1-score del 92.64% en el conjunto de prueba, lo que evidencia una alta capacidad discriminativa entre las actividades físicas analizadas.
+
+El equilibrio observado entre precision (92.92%) y recall (92.77%) indica que el modelo no solo clasifica correctamente un alto porcentaje de instancias, sino que además mantiene un bajo nivel de falsos negativos, aspecto fundamental en aplicaciones de monitoreo de actividad física y salud. Este comportamiento sugiere que KNN logra capturar de manera efectiva patrones locales en el espacio de características, propios de las señales IMU y fisiológicas del dataset PAMAP2.
+
+La validación cruzada 5-fold arrojó un accuracy promedio de 88.76% con una desviación estándar de ±0.26%, lo que refleja una buena estabilidad y capacidad de generalización del modelo. Aunque se observa una ligera disminución del rendimiento respecto al conjunto de prueba, esta diferencia es esperable y no indica sobreajuste significativo, sino más bien un comportamiento consistente frente a diferentes particiones de los datos.
+
+El valor K = 3 resultó ser un compromiso adecuado entre sensibilidad al ruido y capacidad de generalización. Valores mayores de K podrían diluir la influencia de vecinos cercanos relevantes, mientras que valores menores aumentarían la sensibilidad a instancias atípicas. En este contexto, la elección de K permitió mantener una alta exactitud sin introducir ruido innecesario en la clasificación.
+
+En conclusión, KNN se consolida como una solución sólida y confiable para el reconocimiento de actividades físicas en PAMAP2, especialmente en escenarios donde los datos están bien preprocesados y normalizados. Si bien su costo computacional puede ser una limitación en datasets de gran escala, los resultados obtenidos lo posicionan como un baseline robusto. Futuras mejoras podrían lograrse mediante el ajuste fino de K, el uso de ponderación por distancia o técnicas adicionales de selección de características, aunque el rendimiento actual ya puede considerarse excelente según las métricas evaluadas.
 
 ---
 
