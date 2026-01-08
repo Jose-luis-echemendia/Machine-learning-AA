@@ -179,9 +179,12 @@ El objetivo de esta etapa fue limpiar y preparar los datos brutos para su análi
 - Distribución de actividades: Se identificaron 12 actividades principales tras la limpieza (las 18 originales menos las transiciones y algunas actividades con pocos datos).
 
 **Manejo de valores perdidos:**
-- Análisis: Se detectó que el 90.87% de los valores de heart_rate estaban perdidos, mientras que otras características tenían entre 0.12% y 0.57% de valores perdidos.
-- Estrategia: Se utilizó imputación por la mediana con SimpleImputer(strategy='median') para todas las características numéricas, preservando la estructura estadística del dataset.
-- Resultado: Tras la imputación, todas las características quedaron con 0 valores perdidos.
+- Análisis: Se detectó que el 90.87% de los valores de `heart_rate` estaban perdidos, mientras que otras características tenían entre 0.12% y 0.57% de valores perdidos. Dada la extremadamente alta tasa de missingness (>90%), se optó por eliminar completamente la característica `heart_rate` del análisis. Esta decisión se basa en:
+    1. Principio de parsimonia: Con >90% de datos ausentes, cualquier imputación introduciría más ruido artificial que señal genuina.
+    2. Integridad fisiológica: Imputar masivamente valores cardíacos distorsionaría las señales fisiológicas reales.
+    3. Suficiencia de sensores IMU: Los 51 sensores restantes (aceleración, giroscopio, magnetómetro) capturan información discriminativa suficiente.
+- Estrategia para características restantes: Se utilizó imputación por la mediana con `SimpleImputer(strategy='median')` para las características con <1% de valores perdidos, preservando la estructura estadística del dataset.
+- Resultado: Tras la eliminación de `heart_rate` y la imputación, todas las **51 características restantes** quedaron con 0 valores perdidos.
 
 **Separación entrenamiento-prueba:**
 - Proporción: 80% entrenamiento (1,554,297 registros), 20% prueba (388,575 registros).
@@ -196,16 +199,26 @@ El objetivo de esta etapa fue limpiar y preparar los datos brutos para su análi
 
 **Selección y conservación de características:**
 
-A diferencia de muchos flujos de trabajo de aprendizaje automático que incluyen reducción de dimensionalidad, en este estudio se decidió conservar las 52 características originales del dataset PAMAP2. Esta decisión se basa en las siguientes consideraciones:
-- Especificidad del dominio: En reconocimiento de actividades humanas (HAR), cada sensor y cada eje capturan señales complementarias y potencialmente únicas. Por ejemplo, la aceleración en el eje Z del tobillo puede ser determinante para diferenciar "caminar" de "correr", mientras que la frecuencia cardíaca ayuda a separar actividades de alta y baja intensidad.
-- Alto rendimiento: Con el conjunto completo de 52 características, los modelos alcanzaron resultados sobresalientes, lo que indica ausencia de redundancia perjudicial a nivel práctico:
-    - KNN: 92.77% de accuracy
-    - Árbol de decisión: 96.97% de accuracy
-    - MLP: 99.01% de accuracy
-- Complejidad manejable: El espacio de 52 dimensiones es razonable para los algoritmos modernos empleados. KNN funciona correctamente en 52-D con una normalización adecuada, y los MLP están diseñados para manejar alta dimensionalidad de forma eficiente.
-- Preservación de información: Reducir variables podría eliminar patrones sutiles necesarios para distinguir actividades similares (p. ej., "caminar" vs. "caminata nórdica"). Conservar todas las características mantiene la máxima información disponible para el clasificador.
+Tras el preprocesamiento, se dispuso de 51 características derivadas de los sensores IMU (52 originales menos `heart_rate`). A diferencia de flujos de trabajo que aplican reducción de dimensionalidad agresiva, en este estudio se decidió conservar estas 51 características por las siguientes consideraciones:
 
-En síntesis, dado el excelente desempeño obtenido y la naturaleza específica del problema HAR, se decidió conservar todas las características. La selección o reducción de características se considerará solo si surge una necesidad concreta (por ejemplo, restricciones de latencia/energía en dispositivos embebidos o interpretabilidad adicional), no por rendimiento en este escenario.
+1. Especificidad del dominio HAR: Cada sensor (mano, pecho, tobillo) y cada eje (X, Y, Z) capturan información complementaria y potencialmente única. Por ejemplo:
+   - La aceleración en el eje Z del tobillo es determinante para diferenciar "caminar" de "correr".
+   - El giroscopio del pecho ayuda a identificar movimientos rotacionales en actividades como "planchar" o "aspirar".
+   - Los magnetómetros aportan información de orientación relativa.
+
+2. Alto rendimiento con conjunto completo: Los modelos alcanzaron excelentes resultados con las 51 características, indicando baja redundancia perjudicial:
+   - KNN: 92.77% de accuracy
+   - Árbol de decisión: 96.97% de accuracy  
+   - MLP: 99.01% de accuracy
+
+3. Complejidad computacional manejable:** Un espacio de 51 dimensiones es razonable para algoritmos modernos:
+   - KNN funciona eficientemente con normalización adecuada.
+   - MLP está diseñado para alta dimensionalidad.
+   - Árboles de decisión manejan bien características numéricas continuas.
+
+4. Preservación de información discriminativa: Eliminar características adicionales podría perder patrones sutiles necesarios para distinguir actividades físicamente similares (ej: "subir escaleras" vs "bajar escaleras").
+
+En síntesis, Se trabajó con **51 características** bien fundamentadas en el dominio de HAR, priorizando preservación de información sobre reducción automática de dimensionalidad.
 
 #### 3.3.4. Minería de Datos
 
