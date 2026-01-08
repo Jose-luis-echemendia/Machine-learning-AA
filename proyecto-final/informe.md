@@ -247,3 +247,4 @@ LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. Nature
 
 
 Collobert, R., Weston, J., Bottou, L., Karlen, M., Kavukcuoglu, K., & Kuksa, P. (2011). Natural language processing (almost) from scratch. Journal of Machine Learning Research
+
