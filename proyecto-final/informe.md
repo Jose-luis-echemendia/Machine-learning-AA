@@ -142,7 +142,7 @@ Cada uno de estos algoritmos será evaluado dentro del proceso KDD para determin
 
 ---
 
-## 3. Desarrollo – Proceso KDD
+## 3. Desarrollo
 
 ### 3.1. Tipo de Problema y Aprendizaje
 
@@ -163,31 +163,53 @@ Esta selección tripartita permite abarcar un espectro amplio de complejidad, in
 
 ### 3.3. Etapas del Proceso KDD
 
+El proceso KDD se implementó siguiendo las cinco etapas fundamentales: Selección, Preprocesamiento, Transformación, Minería de Datos y Evaluación. A continuación se describe el flujo completo ejecutado para cada uno de los tres algoritmos.
+
 #### 3.3.1. Selección del Dataset
 
-Descripción detallada.
+El dataset PAMAP2 Physical Activity Monitoring fue seleccionado del UCI Machine Learning Repository (Reiss & Stricker, 2012). Este dataset se eligió por ser un estándar de referencia en la investigación de Reconocimiento de Actividades Humanas (HAR), ofreciendo un desafío realista y complejo debido a su naturaleza multivariada y temporal. La versión utilizada contenía 9 archivos individuales (subject101.dat a subject109.dat), correspondientes a los datos de los 9 participantes. El dataset original contenía 2,872,533 registros con 54 columnas, incluyendo las mediciones de los tres IMUs (mano, pecho, tobillo), frecuencia cardíaca, timestamp y actividad ID.
 
 #### 3.3.2. Preprocesamiento
 
-- Limpieza de datos
-- Manejo de valores perdidos
-- Normalización
+El objetivo de esta etapa fue limpiar y preparar los datos brutos para su análisis, eliminando ruido, inconsistencias y valores faltantes.
+
+**Limpieza de datos:**
+- Eliminación de actividades de transición: Se eliminaron todas las instancias con activityID = 0 (actividades transitorias entre tareas), reduciendo el dataset a 1,942,872 registros.
+- Eliminación de columnas irrelevantes: Se eliminó la columna timestamp ya que no aporta valor predictivo para la clasificación instantánea de actividades.
+- Distribución de actividades: Se identificaron 12 actividades principales tras la limpieza (las 18 originales menos las transiciones y algunas actividades con pocos datos).
+
+**Manejo de valores perdidos:**
+- Análisis: Se detectó que el 90.87% de los valores de heart_rate estaban perdidos, mientras que otras características tenían entre 0.12% y 0.57% de valores perdidos.
+- Estrategia: Se utilizó imputación por la mediana con SimpleImputer(strategy='median') para todas las características numéricas, preservando la estructura estadística del dataset.
+- Resultado: Tras la imputación, todas las características quedaron con 0 valores perdidos.
+
+**Separación entrenamiento-prueba:**
+- Proporción: 80% entrenamiento (1,554,297 registros), 20% prueba (388,575 registros).
+- Estratificación: Se utilizó stratify=y para mantener la distribución proporcional de cada actividad en ambos conjuntos.
+
+**Normalización:**
+- Método: Estandarización StandardScaler() (media=0, desviación estándar=1).
+- Justificación: KNN y MLP son sensibles a la escala; la normalización asegura que todas las características contribuyan equitativamente.
+- Proceso: Se ajustó el escalador con X_train y se transformaron tanto X_train como X_test.
 
 #### 3.3.3. Transformación
 
-- Selección de características
-- Ventaneo temporal (opc.)
-- Reducción de dimensionalidad (opc.)
+**Selección de características:**
+- No aplicada explícitamente: Se conservaron las 52 características originales después del preprocesamiento.
+- Justificación: Dado el excelente rendimiento obtenido con todas las características y la naturaleza específica de las señales IMU (cada sensor aporta información valiosa), no se aplicó reducción de dimensionalidad.
+
+**Ventaneo temporal:**
+- No aplicado: Cada instancia se trató como independiente, sin considerar dependencias temporales.
+- Justificación: Para simplificar la comparación algorítmica y centrarse en la clasificación instantánea.
+- Limitación reconocida: Esta simplificación podría mejorarse en trabajos futuros mediante técnicas de procesamiento de series temporales.
 
 #### 3.3.4. Minería de Datos
 
-Entrenamiento con:
+Dada la gran cantidad de datos (~1.5 millones en entrenamiento), se implementaron dos modalidades para cada algoritmo:
+- Opción Rápida: Usando subconjuntos de datos para pruebas y demostraciones.
+- Opción Completa: Usando todo el dataset (comentada en el código para referencia).
 
-- KNN (K-Nearest Neighbors)
-- Árboles de Decisión
-- Redes Neuronales (Perceptrón Multicapa)
-
-Incluye parámetros, gráficas y explicación.
+La evidencia de la implementación se encuentra en el archivo main.piynb: https://github.com/Jose-luis-echemendia/Machine-learning-AA/blob/main/proyecto-final/main.ipynb
 
 #### 3.3.5. Evaluación
 
@@ -256,4 +278,3 @@ LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. Nature
 
 
 Collobert, R., Weston, J., Bottou, L., Karlen, M., Kavukcuoglu, K., & Kuksa, P. (2011). Natural language processing (almost) from scratch. Journal of Machine Learning Research
-
