@@ -146,11 +146,20 @@ Cada uno de estos algoritmos será evaluado dentro del proceso KDD para determin
 
 ### 3.1. Tipo de Problema y Aprendizaje
 
-Clasificación multiclase supervisada.
+El problema abordado en este estudio se define formalmente como una tarea de clasificación supervisada multiclase. Cada instancia en el conjunto de datos PAMAP2 está representada por un vector de características xi∈R52xi​∈R52, que corresponde a las mediciones simultáneas de múltiples sensores corporales en un instante de tiempo específico. A esta instancia se le asocia una etiqueta yi∈{1,2,…,18}yi​∈{1,2,…,18}, que identifica una de las dieciocho actividades físicas realizadas. El objetivo del aprendizaje automático es, por lo tanto, inducir una función de mapeo f:R52→{1,18}f:R52→{1,18} a partir de un conjunto de ejemplos etiquetados {xi,yi}{xi​,yi​}, de modo que la función aprendida ff pueda predecir correctamente la actividad ynewynew​ para una nueva observación de sensores xnewxnew​.
+
+La naturaleza supervisada del aprendizaje proviene de la disponibilidad de este conjunto de datos completamente etiquetado, donde el "supervisor" es la anotación manual de la actividad realizada durante la captura de datos. Este tipo de aprendizaje permite entrenar modelos que generalicen la relación entre patrones de señales sensoriales y actividades, sin requerir descubrir agrupamientos o estructuras ocultas en los datos, como ocurriría en un problema no supervisado. La multiclase se refiere a que la variable objetivo puede tomar más de dos valores discretos, en contraste con una clasificación binaria, lo que aumenta la complejidad del problema y requiere algoritmos y métricas de evaluación específicas.
 
 ### 3.2. Algoritmos Seleccionados
 
-Listado de los tres algoritmos escogidos y justificación.
+Para la resolución del problema de clasificación descrito, se seleccionaron tres algoritmos representativos de diferentes familias del aprendizaje automático, con el fin de realizar un análisis comparativo exhaustivo de sus capacidades y rendimiento sobre el dataset PAMAP2.
+
+Los algoritmos seleccionados son:
+- K-Nearest Neighbors (KNN): Seleccionado como representante de los métodos basados en instancias o aprendizaje perezoso (lazy learning). Su inclusión se justifica por su simplicidad conceptual, que sirve como un baseline sólido, y por su capacidad para capturar patrones locales en el espacio de características sin hacer suposiciones fuertes sobre la distribución de los datos. Permite evaluar si la similitud directa entre lecturas sensoriales es suficiente para discriminar actividades.
+- Árboles de Decisión: Elegido como representante de los modelos basados en reglas de decisión. Su principal justificación radica en su alta interpretabilidad, la cual es valiosa para comprender qué características sensoriales (ej., un umbral específico de aceleración o frecuencia cardíaca) son más discriminantes para cada actividad. Además, su naturaleza no paramétrica y su capacidad para manejar datos no normalizados lo convierten en un candidato robusto para datos de sensores heterogéneos.
+- Perceptrón Multicapa (MLP): Seleccionado como representante de las redes neuronales artificiales y el aprendizaje profundo. Se justifica por su conocido poder de aproximación de funciones no lineales complejas, lo que lo hace ideal para capturar las intrincadas relaciones y dependencias que existen entre las 52 señales de múltiples sensores. Se espera que este algoritmo logre el rendimiento más alto al poder modelar interacciones de alto orden que los métodos anteriores podrían pasar por alto.
+
+Esta selección tripartita permite abarcar un espectro amplio de complejidad, interpretabilidad y capacidad de modelado. La comparación entre un método simple (KNN), uno interpretable (Árbol de Decisión) y uno potente pero complejo (MLP) proporcionará una visión integral sobre las ventajas y compromisos (trade-offs) de cada enfoque para la tarea específica de reconocimiento de actividades físicas.
 
 ### 3.3. Etapas del Proceso KDD
 
