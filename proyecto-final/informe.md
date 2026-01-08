@@ -194,20 +194,30 @@ El objetivo de esta etapa fue limpiar y preparar los datos brutos para su análi
 
 #### 3.3.3. Transformación
 
-**Selección de características:**
-- No aplicada explícitamente: Se conservaron las 52 características originales después del preprocesamiento.
-- Justificación: Dado el excelente rendimiento obtenido con todas las características y la naturaleza específica de las señales IMU (cada sensor aporta información valiosa), no se aplicó reducción de dimensionalidad.
+**Selección y conservación de características:**
 
-**Ventaneo temporal:**
-- No aplicado: Cada instancia se trató como independiente, sin considerar dependencias temporales.
-- Justificación: Para simplificar la comparación algorítmica y centrarse en la clasificación instantánea.
-- Limitación reconocida: Esta simplificación podría mejorarse en trabajos futuros mediante técnicas de procesamiento de series temporales.
+A diferencia de muchos flujos de trabajo de aprendizaje automático que incluyen reducción de dimensionalidad, en este estudio se decidió conservar las 52 características originales del dataset PAMAP2. Esta decisión se basa en las siguientes consideraciones:
+- Especificidad del dominio: En reconocimiento de actividades humanas (HAR), cada sensor y cada eje capturan señales complementarias y potencialmente únicas. Por ejemplo, la aceleración en el eje Z del tobillo puede ser determinante para diferenciar "caminar" de "correr", mientras que la frecuencia cardíaca ayuda a separar actividades de alta y baja intensidad.
+- Alto rendimiento: Con el conjunto completo de 52 características, los modelos alcanzaron resultados sobresalientes, lo que indica ausencia de redundancia perjudicial a nivel práctico:
+    - KNN: 92.77% de accuracy
+    - Árbol de decisión: 96.97% de accuracy
+    - MLP: 99.01% de accuracy
+- Complejidad manejable: El espacio de 52 dimensiones es razonable para los algoritmos modernos empleados. KNN funciona correctamente en 52-D con una normalización adecuada, y los MLP están diseñados para manejar alta dimensionalidad de forma eficiente.
+- Preservación de información: Reducir variables podría eliminar patrones sutiles necesarios para distinguir actividades similares (p. ej., "caminar" vs. "caminata nórdica"). Conservar todas las características mantiene la máxima información disponible para el clasificador.
+
+En síntesis, dado el excelente desempeño obtenido y la naturaleza específica del problema HAR, se decidió conservar todas las características. La selección o reducción de características se considerará solo si surge una necesidad concreta (por ejemplo, restricciones de latencia/energía en dispositivos embebidos o interpretabilidad adicional), no por rendimiento en este escenario.
 
 #### 3.3.4. Minería de Datos
 
 Dada la gran cantidad de datos (~1.5 millones en entrenamiento), se implementaron dos modalidades para cada algoritmo:
 - Opción Rápida: Usando subconjuntos de datos para pruebas y demostraciones.
 - Opción Completa: Usando todo el dataset (comentada en el código para referencia).
+
+| **Algoritmo** | **Muestras de Entrenamiento** | **% del Total** | **Tiempo de Entrenamiento** | **Justificación** |
+|---------------|------------------------------|-----------------|-----------------------------|-------------------|
+| **K-Nearest Neighbors (KNN)** | 20,000 muestras | 1.3% | Rápido (~segundos) | Alto costo en predicción (O(nd)) debido a su naturaleza de *lazy learning*. Prohibitivo usar dataset completo. |
+| **Árbol de Decisión** | 50,000 muestras | 3.2% | Moderado (~decenas de segundos) | Balance entre tiempo de entrenamiento y capacidad de generalización. Suficiente para estimar reglas de división. |
+| **Perceptrón Multicapa (MLP)** | **1,554,297 muestras** (completo) | **100%** | Lento (~750 segundos) | Las redes neuronales se benefician significativamente de más datos. Costo principal en entrenamiento, no en predicción. |
 
 La evidencia de la implementación se encuentra en el archivo main.piynb: https://github.com/Jose-luis-echemendia/Machine-learning-AA/blob/main/proyecto-final/main.ipynb
 
