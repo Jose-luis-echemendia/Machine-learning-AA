@@ -179,7 +179,7 @@ El objetivo de esta etapa fue limpiar y preparar los datos brutos para su análi
 - Distribución de actividades: Se identificaron 12 actividades principales tras la limpieza (las 18 originales menos las transiciones y algunas actividades con pocos datos).
 
 **Manejo de valores perdidos:**
-- Análisis: Se detectó que el 90.87% de los valores de `heart_rate` estaban perdidos, mientras que otras características tenían entre 0.12% y 0.57% de valores perdidos. Dada la extremadamente alta tasa de missingness (>90%), se optó por eliminar completamente la característica `heart_rate` del análisis. Esta decisión se basa en:
+- Análisis: Se detectó que el 90.87% de los valores de `heart_rate` estaban perdidos, mientras que otras características tenían entre 0.12% y 0.57% de valores perdidos. Dada la extremadamente alta tasa de valores pérdidos (>90%), se optó por eliminar completamente la característica `heart_rate` del análisis. Esta decisión se basa en:
     1. Principio de parsimonia: Con >90% de datos ausentes, cualquier imputación introduciría más ruido artificial que señal genuina.
     2. Integridad fisiológica: Imputar masivamente valores cardíacos distorsionaría las señales fisiológicas reales.
     3. Suficiencia de sensores IMU: Los 51 sensores restantes (aceleración, giroscopio, magnetómetro) capturan información discriminativa suficiente.
@@ -197,8 +197,9 @@ El objetivo de esta etapa fue limpiar y preparar los datos brutos para su análi
 
 #### 3.3.3. Transformación
 
-**Selección y conservación de características:**
+La etapa de transformación tiene como objetivo adaptar la estructura y el conjunto de características de los datos preprocesados para que sean óptimos para el modelado y la extracción de conocimiento. En este paso, se evalúa y define el espacio de características final que alimentará a los algoritmos de minería de datos, buscando un equilibrio entre la completitud de la información y la eficiencia computacional. A continuación, se detalla la estrategia adoptada para la selección y conservación de las características en este estudio.
 
+**Selección y conservación de características:**
 Tras el preprocesamiento, se dispuso de 51 características derivadas de los sensores IMU (52 originales menos `heart_rate`). A diferencia de flujos de trabajo que aplican reducción de dimensionalidad agresiva, en este estudio se decidió conservar estas 51 características por las siguientes consideraciones:
 
 1. Especificidad del dominio HAR: Cada sensor (mano, pecho, tobillo) y cada eje (X, Y, Z) capturan información complementaria y potencialmente única. Por ejemplo:
@@ -206,17 +207,12 @@ Tras el preprocesamiento, se dispuso de 51 características derivadas de los sen
    - El giroscopio del pecho ayuda a identificar movimientos rotacionales en actividades como "planchar" o "aspirar".
    - Los magnetómetros aportan información de orientación relativa.
 
-2. Alto rendimiento con conjunto completo: Los modelos alcanzaron excelentes resultados con las 51 características, indicando baja redundancia perjudicial:
-   - KNN: 92.77% de accuracy
-   - Árbol de decisión: 96.97% de accuracy  
-   - MLP: 99.01% de accuracy
+2. Preservación de la Información Discriminativa: La eliminación de características podría erosionar patrones sutiles necesarios para distinguir actividades físicamente similares, como "subir escaleras" versus "bajar escaleras", donde las señales de aceleración y giroscopio tienen firmas temporo-espaciales distintas.
 
-3. Complejidad computacional manejable:** Un espacio de 51 dimensiones es razonable para algoritmos modernos:
+3. Complejidad computacional manejable: Un espacio de 51 dimensiones es razonable para algoritmos modernos:
    - KNN funciona eficientemente con normalización adecuada.
    - MLP está diseñado para alta dimensionalidad.
    - Árboles de decisión manejan bien características numéricas continuas.
-
-4. Preservación de información discriminativa: Eliminar características adicionales podría perder patrones sutiles necesarios para distinguir actividades físicamente similares (ej: "subir escaleras" vs "bajar escaleras").
 
 En síntesis, Se trabajó con **51 características** bien fundamentadas en el dominio de HAR, priorizando preservación de información sobre reducción automática de dimensionalidad.
 
